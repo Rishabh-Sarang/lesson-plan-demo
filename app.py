@@ -1,11 +1,12 @@
 import streamlit as st
 import PyPDF2
 from langchain_cohere import ChatCohere
+from lagnchain_groq import ChatGroq
 from langchain.schema import HumanMessage
 from dotenv import load_dotenv
 
 load_dotenv()
-llm = ChatCohere()
+llm = ChatGroq(model="llama-3.3-70b-versatile", temperature=0, api_key="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")
 
 def extract_text_from_pdf(pdf_file):
     """Extract text from the uploaded PDF file."""
