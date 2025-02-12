@@ -1,7 +1,7 @@
 import streamlit as st
 import PyPDF2
 from langchain_cohere import ChatCohere
-from lagnchain_groq import ChatGroq
+from langchain_groq import ChatGroq
 from langchain.schema import HumanMessage
 from dotenv import load_dotenv
 
