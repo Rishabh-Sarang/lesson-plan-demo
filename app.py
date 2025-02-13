@@ -1,11 +1,15 @@
 import streamlit as st
 import PyPDF2
-from langchain_cohere import ChatCohere
+from langchain_mistralai import ChatMistralAI
 from langchain.schema import HumanMessage
 from dotenv import load_dotenv
 
 load_dotenv()
-llm = ChatCohere()
+llm = ChatMistralAI(
+    model="mistral-large-latest",
+    temperature=0,
+    max_retries=2,
+)
 
 def extract_text_from_pdf(pdf_file):
     """Extract text from the uploaded PDF file."""
@@ -137,7 +141,7 @@ Diagnostic:
 
     Observation Task: Ask students to equally share objects (e.g., “Share 8 counters among 4 groups”).
     Quick Quiz:
-        "What’s larger: 1/2 or 1/3?"
+        "Whats larger: 1/2 or 1/3?"
         "How many parts make up a whole in thirds?"
     Pre-Test: Fold paper strips into halves/thirds and check their understanding.
 
