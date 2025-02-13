@@ -1,4 +1,4 @@
 streamlit
 PyPDF2
-langchain-cohere
+langchain_mistralai
 python-dotenv
