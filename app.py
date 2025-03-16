@@ -165,20 +165,20 @@ Teacher Notes:
     return llm.stream(f"Create a lesson plan in detail for the students of {grade_standard_country} for the topic {substrand} with the help of the following example: {prompt}")
 
 st.title("Lesson Plan Generator")
-st.write("Upload a curriculum PDF file to extract substrands and generate lesson plans or directly input a topic and grade/standard/country to create a lesson plan.")
+st.write("Upload a curriculum PDF file to extract substrands/units and generate lesson plans or directly input a topic and grade/standard/country to create a lesson plan.")
 
 uploaded_file = st.file_uploader("Upload PDF Document", type="pdf")
 if uploaded_file is not None:
     st.write("Extracting text from the uploaded PDF...")
     pdf_text = extract_text_from_pdf(uploaded_file)
     
-    st.write("Extracting substrands...")
-    prompt = f"Extract all the substrands from this text and return them as a comma-separated list: {pdf_text}"
+    st.write("Extracting substrands/untis...")
+    prompt = f"Extract all the substrands/units from this text and return them as a comma-separated list: {pdf_text}. only print the list nothing else"
     response = llm.invoke([HumanMessage(content=prompt)])
     substrands_text = response.content
     substrands_list = [substrand.strip() for substrand in substrands_text.split(",")]
     
-    st.write("Substrands extracted successfully! Select a substrand to generate a lesson plan:")
+    st.write("Substrands extracted successfully! Select a substrand/unit to generate a lesson plan:")
     
     for substrand in substrands_list:
         if st.button(f"Generate for: {substrand}"):
