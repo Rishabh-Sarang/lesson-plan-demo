@@ -1,15 +1,11 @@
 import streamlit as st
 import PyPDF2
-from langchain_mistralai import ChatMistralAI
+from langchain.chat_models import init_chat_model
 from langchain.schema import HumanMessage
 from dotenv import load_dotenv
 
 load_dotenv()
-llm = ChatMistralAI(
-    model="mistral-large-latest",
-    temperature=0,
-    max_retries=2,
-)
+llm = init_chat_model("llama-3.3-70b-versatile", model_provider="groq")
 
 def extract_text_from_pdf(pdf_file):
     """Extract text from the uploaded PDF file."""
@@ -19,7 +15,7 @@ def extract_text_from_pdf(pdf_file):
         full_text += page.extract_text()
     return full_text
 
-def get_plan(substrand, grade_standard_country="kenya"):
+def get_plan(substrand, grade_standard_country="india"):
     prompt = '''Unit 1: Introduction to Fractions
 Strand: Number and Operation
 Content Standard: Extend knowledge of simple fractions to define and represent quantities, sizes, and structures (PNG Curriculum Standard 3.1.7).
@@ -173,21 +169,22 @@ if uploaded_file is not None:
     pdf_text = extract_text_from_pdf(uploaded_file)
     
     st.write("Extracting substrands/untis...")
-    prompt = f"Extract all the substrands/units from this text and return them as a comma-separated list: {pdf_text}. only print the list nothing else"
+    prompt = f"Extract all the substrands/units from this text and return them as a comma-separated list: {pdf_text}. only print the content of the list nothing else like here is the list... etc."
     response = llm.invoke([HumanMessage(content=prompt)])
     substrands_text = response.content
     substrands_list = [substrand.strip() for substrand in substrands_text.split(",")]
     
     st.write("Substrands extracted successfully! Select a substrand/unit to generate a lesson plan:")
     
-    for substrand in substrands_list:
-        if st.button(f"Generate for: {substrand}"):
+    for i, substrand in enumerate(substrands_list):
+        if st.button(f"Generate for: {substrand}", key=f"button_{i}"):
             st.write(f"Generating lesson plan for: {substrand}")
             st.write_stream(get_plan(substrand))
 
+
 st.write("Or manually input details to create a custom lesson plan:")
 topic = st.text_input("Enter the topic (e.g., Fractions):", "")
-grade_standard_country = st.text_input("Enter the grade/standard/country (e.g., Grade 5, Kenya):", "")
+grade_standard_country = st.text_input("Enter the grade/standard/country (e.g., class 5, india):", "")
 
 if st.button("Generate Custom Lesson Plan"):
     if topic and grade_standard_country:
